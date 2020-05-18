@@ -22,9 +22,6 @@ public class MainScript {
 		AutomatonState T = AutomatonState.initiateStartingPattern(initialState);
 		filePrint.println("0 " + T.getAmountLivingCells());
 		for(int count = 0; count < amtSteps; count++, r.transferState(T), filePrint.println(count + " " + T.getAmountLivingCells()));
-		T.print();
-		r.transferState(T);
-		T.print();
 		filePrint.close();
 	}
 }
