@@ -1,0 +1,16 @@
+path='volterra.txt'
+
+set terminal 'pdf'
+set output 'out.pdf'
+
+set title 'Populations by time'
+set xlabel 'Time'
+set ylabel 'Population'
+
+plot for [col=2:3] path using 1:col with lines title columnheader
+
+set title 'Phase diagram of Predators vs Prey'
+set xlabel 'Predators'
+set ylabel 'Prey'
+
+plot path using 2:3 with dots title ''
