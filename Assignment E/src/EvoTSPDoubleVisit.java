@@ -54,8 +54,8 @@ public abstract class EvoTSPDoubleVisit {
 			B = amtOffspring+r.nextInt(this.populationSize-amtOffspring);
 			this.population[i] = this.generateOffspring(A, B);
 			this.doMutation(i);
-			this.sortByFitness();
 		}
+		this.sortByFitness();
 	}
 	
 	public double getBestFitness() {
