@@ -35,6 +35,7 @@ public class MainScript {
 	
 	
 	public static void main(String[] args) throws java.io.FileNotFoundException{
+		//Read in all necessary input
 		EvoTSPDoubleVisit alg;
 		Scanner consoleIn = new Scanner(System.in);
 		int[][] readCoords = MainScript.readPointsFromFile("Positions_PA-E.txt");
@@ -52,6 +53,7 @@ public class MainScript {
 		String outFilename = consoleIn.next();
 		consoleIn.close();
 		
+		//Depending on mode, run part one or part two of the exercise
 		if(mode.equals("max")) {
 			alg = new AssignmentPartOne(G, popSz, amtOffspring);
 		} else if(mode.equals("min")) {
@@ -60,6 +62,8 @@ public class MainScript {
 			System.out.println("Wrong mode entered!");
 			return;
 		}
+		
+		//File to print results to
 		PrintWriter resultOut = new PrintWriter(outFilename);
 		for(int i = 0; i < amtSteps; i++) {
 			alg.doEvoStep();
