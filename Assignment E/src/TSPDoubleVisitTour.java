@@ -7,7 +7,7 @@ public class TSPDoubleVisitTour {
 	//Initializes based on a random tour
 	public TSPDoubleVisitTour(int size, boolean initialize) {
 		this.size = size;
-		this.tourstops = new int[2*size];
+		this.tourstops = new int[2*this.size];
 		
 		//If initialize flag is set, generate a random tour. Else continue with an allocated but uninitialized array
 		if(initialize) {	
@@ -49,12 +49,11 @@ public class TSPDoubleVisitTour {
 	}
 	
 	public double getTourLength(GeomSpace G) {
-		//Add up all point-distances of route taken. Don't forget last distance, because we implement a cycle
+		//Add up all point-distances of route taken.
 		double result = 0;
 		for(int i = 0; i+1 < 2*size; i++) {
 			result += G.getDistance(this.tourstops[i], this.tourstops[i+1]);
 		}
-		result += G.getDistance(this.tourstops[0], this.tourstops[(2*size) - 1]);
 		
 		return result;
 	}
@@ -69,7 +68,7 @@ public class TSPDoubleVisitTour {
 					//Cannot swap with next element because it is the last pair.
 					this.swap(i, i-1);
 				} else {
-					this.swap(i, i+2);
+					this.swap(i+1, i+2);
 				}
 			}
 		}

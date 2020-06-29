@@ -16,25 +16,28 @@ public abstract class EvoTSPDoubleVisit {
 	protected final int populationSize;
 	protected TSPDoubleVisitTour[] population;
 	protected GeomSpace groundSpace;
-	protected int cutoff;
+	protected int amtOffspring;
 	protected Random r;
 	
 	public abstract double getFitness(TSPDoubleVisitTour T);
 	
 	//Constructor initializes random population
-	public EvoTSPDoubleVisit(GeomSpace G, int populationSize, int cutoff) {
+	public EvoTSPDoubleVisit(GeomSpace G, int populationSize, int amtOffspring) {
 		this.groundSpace = G;
 		this.populationSize = populationSize;
-		this.cutoff = cutoff;
+		this.amtOffspring = amtOffspring;
 		this.r = new Random();
 		
 		this.population = new TSPDoubleVisitTour[this.populationSize];
 		for(int i = 0; i < this.populationSize; i++) {
 			population[i] = new TSPDoubleVisitTour(G.getSize(), true);
 		}
+		this.sortByFitness();
 	}
 	
 	//Sorts the population by fitness
+	//Worse individuals first, best individuals last
+	//population[0] = worst individial; population[populationSize-1] = best individual, population[amtOffspring] = worst parent
 	protected void sortByFitness() {
 		Arrays.sort(this.population, Comparator.comparingDouble(this::getFitness));
 	}
@@ -45,19 +48,31 @@ public abstract class EvoTSPDoubleVisit {
 	
 	public void doEvoStep() {
 		int A,B;
-		this.sortByFitness();
-		for(int i = 0; i < cutoff; i++) {
+		for(int i = 0; i < amtOffspring; i++) {
 			//It is explicitly allowed to have one parent (A==B)
-			A = cutoff+r.nextInt(this.populationSize-cutoff);
-			B = cutoff+r.nextInt(this.populationSize-cutoff);
+			A = amtOffspring+r.nextInt(this.populationSize-amtOffspring);
+			B = amtOffspring+r.nextInt(this.populationSize-amtOffspring);
 			this.population[i] = this.generateOffspring(A, B);
 			this.doMutation(i);
+			this.sortByFitness();
 		}
 	}
 	
 	public double getBestFitness() {
-		this.sortByFitness();
 		return getFitness(this.population[this.populationSize-1]);
+	}
+	
+	public double getMeanParentFitness() {
+		double result = 0;
+		for(int i = amtOffspring; i < this.populationSize; i++) {
+			result += this.getFitness(this.population[i]);
+		}
+		
+		return result/(populationSize-amtOffspring);
+	}
+	
+	public double getWorstParentFitness() {
+		return getFitness(this.population[amtOffspring]);
 	}
 	
 }

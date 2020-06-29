@@ -35,14 +35,35 @@ public class MainScript {
 	
 	
 	public static void main(String[] args) throws java.io.FileNotFoundException{
+		EvoTSPDoubleVisit alg;
+		Scanner consoleIn = new Scanner(System.in);
 		int[][] readCoords = MainScript.readPointsFromFile("Positions_PA-E.txt");
 		int sz = readCoords.length;
 		GeomSpace G = new GeomSpace(sz, readCoords);
-		EvoTSPDoubleVisit alg = new AssignmentPartOne(G, 50, 20);
-		PrintWriter resultOut = new PrintWriter("result.txt");
-		for(int i = 0; i < 10000; i++) {
+		System.out.print("Minimize (\"min\") or maximize (\"max\") length of tour: ");
+		String mode = consoleIn.next();
+		System.out.print("Size of population: ");
+		int popSz = consoleIn.nextInt();
+		System.out.print("Amount of individuals killed/Amount of offspring per generation: ");
+		int amtOffspring = consoleIn.nextInt();
+		System.out.print("Amount of steps: ");
+		int amtSteps = consoleIn.nextInt();
+		System.out.print("Save results to: ");
+		String outFilename = consoleIn.next();
+		consoleIn.close();
+		
+		if(mode.equals("max")) {
+			alg = new AssignmentPartOne(G, popSz, amtOffspring);
+		} else if(mode.equals("min")) {
+			alg = new AssignmentPartTwo(G, popSz, amtOffspring);
+		} else {
+			System.out.println("Wrong mode entered!");
+			return;
+		}
+		PrintWriter resultOut = new PrintWriter(outFilename);
+		for(int i = 0; i < amtSteps; i++) {
 			alg.doEvoStep();
-			resultOut.println(i + " " + alg.getBestFitness());
+			resultOut.println(i + " " + alg.getBestFitness() + " " + alg.getMeanParentFitness() + " " + alg.getWorstParentFitness());
 		}
 		resultOut.close();
 		
